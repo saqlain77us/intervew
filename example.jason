@@ -1,0 +1,30 @@
+{
+  "marketing": {
+    "dnszone": "marketing.asx.com.au.",
+    "targets": [
+      "10.1.2.1",
+      "10.1.2.2",
+      "10.2.2.1",
+      "10.2.2.2"
+    ],
+    "private": true
+  },
+  "clearing": {
+    "dnszone": "clearing.asx.com.au.",
+    "targets": [
+      "10.1.3.1",
+      "10.2.3.1"
+    ],
+    "private": true
+  },
+  "digital": {
+    "dnszone": "digital.asx.com.au.",
+    "targets": [
+      "10.1.4.1",
+      "10.1.4.2",
+      "10.2.4.1",
+      "10.2.4.2"
+    ],
+    "private": false
+  }
+}

@@ -8,7 +8,54 @@ resource "aws_vpc" "main" {
         Name = "${var.autoscaling_group_name}-vpc"
     }
 }
+# IAM Role for EC2 instances
+resource "aws_iam_role" "instance_role" {
+  name = "${var.autoscaling_group_name}-instance-role"
 
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+# IAM Policy for CloudWatch Logs
+resource "aws_iam_role_policy" "cloudwatch_logs" {
+  name = "${var.autoscaling_group_name}-cloudwatch-logs"
+  role = aws_iam_role.instance_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = [
+          "arn:aws:logs:*:*:log-group:${var.autoscaling_group_name}-*",
+          "arn:aws:logs:*:*:log-group:${var.autoscaling_group_name}-*:log-stream:*"
+        ]
+      }
+    ]
+  })
+}
+
+# Instance Profile
+resource "aws_iam_instance_profile" "main" {
+  name = "${var.autoscaling_group_name}-instance-profile"
+  role = aws_iam_role.instance_role.name
+}
 # Public and Private Subnets
 resource "aws_subnet" "public" {
     count                   = 2

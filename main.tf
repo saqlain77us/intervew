@@ -8,6 +8,7 @@ resource "aws_vpc" "main" {
         Name = "${var.autoscaling_group_name}-vpc"
     }
 }
+
 # IAM Role for EC2 instances
 resource "aws_iam_role" "instance_role" {
   name = "${var.autoscaling_group_name}-instance-role"
@@ -56,6 +57,8 @@ resource "aws_iam_instance_profile" "main" {
   name = "${var.autoscaling_group_name}-instance-profile"
   role = aws_iam_role.instance_role.name
 }
+
+
 # Public and Private Subnets
 resource "aws_subnet" "public" {
     count                   = 2

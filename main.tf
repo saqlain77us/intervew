@@ -169,6 +169,12 @@ resource "aws_security_group" "instance" {
     }
 }
 
+# Attach SSM Managed Policy to the Instance Role
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 # Launch Template
 resource "aws_launch_template" "main" {
     name_prefix   = "lt-"
